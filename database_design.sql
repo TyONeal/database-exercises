@@ -156,7 +156,7 @@ DESCRIBE categories;
 # Query to select user from a specific post...
 SELECT user_email
 FROM users
-WHERE id IN(SELECT posts.id FROM posts WHERE posts.id = 2)
+WHERE id IN(SELECT posts.id FROM posts WHERE users.id = 2)
 ;
 
 # Query to select category/categories the post belongs to...
@@ -170,6 +170,25 @@ FROM posts
 WHERE id IN (SELECT category_id FROM post_category WHERE category_id IN (SELECT id FROM categories WHERE category_id = 2));
 
 # Query to select posts from a specific user...
-SELECT post_title
+SELECT user_id
 FROM posts
-WHERE id IN (SELECT post_id FROM users WHERE post_id = 2);
+WHERE user_id IN (SELECT id FROM users WHERE users.id = 2);
+
+ALTER TABLE users
+DROP FOREIGN KEY users_posts_posts_id_fk;
+
+DESCRIBE users;
+
+ALTER TABLE users
+Drop post_id;
+
+ALTER TABLE posts
+ADD COLUMN user_id INT UNSIGNED NOT NULL;
+
+DESCRIBE posts;
+
+ALTER TABLE posts
+ADD CONSTRAINT posts_users_id_fk FOREIGN KEY (user_id) REFERENCES users (id);
+
+SELECT * FROM users;
+SELECT * FROM posts;
